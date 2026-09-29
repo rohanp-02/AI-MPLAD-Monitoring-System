@@ -8,6 +8,7 @@ from risk_engine import (
     get_peer_benchmark,
     calculate_early_warning
 )
+
 from ml_model import detect_anomalies
 
 
@@ -26,14 +27,17 @@ USERS = {
         "password": "verify123",
         "role": "Verification Officer"
     },
+
     "project": {
         "password": "project123",
         "role": "Project Officer"
     },
+
     "supervisor": {
         "password": "super123",
         "role": "Supervisor"
     },
+
     "admin": {
         "password": "admin123",
         "role": "Admin"
@@ -42,6 +46,7 @@ USERS = {
 
 
 ROLE_PERMISSIONS = {
+
     "Verification Officer": {
         "dashboard",
         "projects",
@@ -79,6 +84,10 @@ ROLE_PERMISSIONS = {
 }
 
 
+# ============================================================
+# LOGIN REQUIRED
+# ============================================================
+
 def login_required(view):
 
     @wraps(view)
@@ -91,6 +100,10 @@ def login_required(view):
 
     return wrapped_view
 
+
+# ============================================================
+# ROLE REQUIRED
+# ============================================================
 
 def role_required(permission):
 
@@ -129,18 +142,17 @@ def role_required(permission):
     return decorator
 
 
+# ============================================================
+# GLOBAL USER CONTEXT
+# ============================================================
+
 @app.context_processor
 def inject_user():
 
     return {
-        "current_username":
-            session.get("username"),
-
-        "current_role":
-            session.get("role"),
-
-        "logged_in":
-            "username" in session
+        "current_username": session.get("username"),
+        "current_role": session.get("role"),
+        "logged_in": "username" in session
     }
 
 
@@ -706,19 +718,25 @@ def dashboard():
         )
 
         try:
+
             score = float(score)
+
         except Exception:
+
             score = 0
 
         level = str(level).upper()
 
         if level == "HIGH":
+
             high_risk += 1
 
         elif level == "MEDIUM":
+
             medium_risk += 1
 
         else:
+
             low_risk += 1
 
         total_expenditure += float(
@@ -746,6 +764,7 @@ def dashboard():
                 0
             )
         ):
+
             delayed_projects += 1
 
         ml_result = ml_results.get(
@@ -761,6 +780,7 @@ def dashboard():
         if ml_result.get(
             "label"
         ) == "ANOMALY":
+
             ml_anomalies += 1
 
         early_warning = get_early_warning(
@@ -774,6 +794,7 @@ def dashboard():
             "HIGH",
             "MEDIUM"
         ):
+
             rule_based_attention += 1
 
         if (
@@ -781,6 +802,7 @@ def dashboard():
             == "ANOMALY"
             and level == "LOW"
         ):
+
             ml_only_cases += 1
 
         requires_review = (
@@ -805,15 +827,28 @@ def dashboard():
             review_queue_count += 1
 
         risk_projects.append({
+
             "project": project,
+
             "score": score,
+
             "risk_score": score,
+
             "level": level,
+
             "risk_level": level,
+
             "reasons": reasons,
-            "recommendations": recommendations,
-            "ml_result": ml_result,
-            "early_warning": early_warning,
+
+            "recommendations":
+                recommendations,
+
+            "ml_result":
+                ml_result,
+
+            "early_warning":
+                early_warning,
+
             "review_status":
                 get_review_status(
                     project_code
@@ -821,10 +856,15 @@ def dashboard():
         })
 
         early_warning_projects.append({
+
             "project": project,
+
             "score": score,
+
             "level": level,
-            "early_warning": early_warning
+
+            "early_warning":
+                early_warning
         })
 
     if total_projects > 0:
@@ -873,34 +913,48 @@ def dashboard():
                 )
 
             district_data[district] = {
+
                 "district": district,
+
                 "projects": 0,
+
                 "high": 0,
+
                 "medium": 0,
+
                 "low": 0,
+
                 "anomalies": 0,
+
                 "risk_total": 0,
+
                 "latitude": latitude,
+
                 "longitude": longitude
             }
 
         data = district_data[district]
 
         data["projects"] += 1
+
         data["risk_total"] += float(score)
 
         if str(level).upper() == "HIGH":
+
             data["high"] += 1
 
         elif str(level).upper() == "MEDIUM":
+
             data["medium"] += 1
 
         else:
+
             data["low"] += 1
 
         if ml_result.get(
             "label"
         ) == "ANOMALY":
+
             data["anomalies"] += 1
 
     district_list = []
@@ -915,22 +969,31 @@ def dashboard():
         )
 
         if risk_score >= 60:
+
             risk_level = "HIGH"
 
         elif risk_score >= 30:
+
             risk_level = "MEDIUM"
 
         else:
+
             risk_level = "LOW"
 
         district_list.append({
+
             **data,
-            "risk_score": risk_score,
-            "risk_level": risk_level
+
+            "risk_score":
+                risk_score,
+
+            "risk_level":
+                risk_level
         })
 
     district_list.sort(
-        key=lambda x: x["risk_score"],
+        key=lambda x:
+            x["risk_score"],
         reverse=True
     )
 
@@ -940,12 +1003,16 @@ def dashboard():
         total_projects=total_projects,
 
         high_risk=high_risk,
+
         medium_risk=medium_risk,
+
         low_risk=low_risk,
 
-        delayed_projects=delayed_projects,
+        delayed_projects=
+            delayed_projects,
 
-        ml_anomalies=ml_anomalies,
+        ml_anomalies=
+            ml_anomalies,
 
         rule_based_attention=
             rule_based_attention,
@@ -1047,15 +1114,28 @@ def projects():
         )
 
         project_data.append({
+
             "project": project,
+
             "score": score,
+
             "risk_score": score,
+
             "level": level,
+
             "risk_level": level,
+
             "reasons": reasons,
-            "recommendations": recommendations,
-            "ml_result": ml_result,
-            "early_warning": early_warning,
+
+            "recommendations":
+                recommendations,
+
+            "ml_result":
+                ml_result,
+
+            "early_warning":
+                early_warning,
+
             "review_status":
                 get_review_status(
                     project.get(
@@ -1087,6 +1167,7 @@ def project_detail(project_id):
     )
 
     if project is None:
+
         return "Project not found", 404
 
     score, level, reasons, recommendations = \
@@ -1136,9 +1217,11 @@ def project_detail(project_id):
         project=project,
 
         score=score,
+
         risk_score=score,
 
         level=str(level).upper(),
+
         risk_level=str(level).upper(),
 
         reasons=reasons,
@@ -1176,6 +1259,7 @@ def verify_project(project_id):
     )
 
     if project is None:
+
         return "Project not found", 404
 
     action = request.form.get(
@@ -1291,7 +1375,17 @@ def review_queue():
 
     review_items = []
 
+    # Summary counters
+    total_reviews = 0
+    high_risk_count = 0
+    medium_risk_count = 0
+    ml_anomaly_count = 0
+
     for project in projects:
+
+        # ----------------------------------------------------
+        # RISK ANALYSIS
+        # ----------------------------------------------------
 
         score, level, reasons, recommendations = \
             get_risk_data(project)
@@ -1299,6 +1393,20 @@ def review_queue():
         reasons = normalize_reasons(
             reasons
         )
+
+        try:
+
+            score = float(score)
+
+        except Exception:
+
+            score = 0
+
+        level = str(level).upper()
+
+        # ----------------------------------------------------
+        # ML ANALYSIS
+        # ----------------------------------------------------
 
         ml_result = ml_results.get(
             project.get("id"),
@@ -1310,41 +1418,137 @@ def review_queue():
             }
         )
 
+        ml_label = str(
+            ml_result.get(
+                "label",
+                "NORMAL"
+            )
+        ).upper()
+
+        anomaly_score = ml_result.get(
+            "anomaly_score",
+            0
+        )
+
+        # ----------------------------------------------------
+        # EARLY WARNING
+        # ----------------------------------------------------
+
         early_warning = get_early_warning(
             project,
             ml_result
         )
 
-        requires_review = (
-            str(level).upper()
-            in ("HIGH", "MEDIUM")
-            or
-            ml_result.get(
-                "label"
-            ) == "ANOMALY"
-            or
+        warning_score = early_warning.get(
+            "score",
+            0
+        )
+
+        warning_level = str(
             early_warning.get(
-                "level"
+                "level",
+                "LOW"
             )
-            in ("HIGH", "MEDIUM")
+        ).upper()
+
+        indicators = early_warning.get(
+            "indicators",
+            []
+        )
+
+        # ----------------------------------------------------
+        # REVIEW CONDITION
+        # ----------------------------------------------------
+
+        requires_review = (
+
+            level in (
+                "HIGH",
+                "MEDIUM"
+            )
+
+            or
+
+            ml_label == "ANOMALY"
+
+            or
+
+            warning_level in (
+                "HIGH",
+                "MEDIUM"
+            )
         )
 
         if not requires_review:
+
             continue
+
+        # ----------------------------------------------------
+        # REVIEW STATUS
+        # ----------------------------------------------------
+
+        project_code = project.get(
+            "project_code",
+            ""
+        )
+
+        review_status = get_review_status(
+            project_code
+        )
+
+        # ----------------------------------------------------
+        # SUMMARY COUNTERS
+        # ----------------------------------------------------
+
+        total_reviews += 1
+
+        if level == "HIGH":
+
+            high_risk_count += 1
+
+        elif level == "MEDIUM":
+
+            medium_risk_count += 1
+
+        if ml_label == "ANOMALY":
+
+            ml_anomaly_count += 1
+
+        # ----------------------------------------------------
+        # REVIEW ITEM
+        # ----------------------------------------------------
 
         review_items.append({
 
-            "project": project,
+            "id":
+                project.get("id"),
 
-            "score": score,
+            "project_code":
+                project_code,
 
-            "risk_score": score,
+            "project_name":
+                project.get(
+                    "name",
+                    "Unknown Project"
+                ),
 
-            "level":
-                str(level).upper(),
+            "category":
+                project.get(
+                    "category",
+                    "Infrastructure"
+                ),
+
+            "risk_score":
+                score,
 
             "risk_level":
-                str(level).upper(),
+                level,
+
+            "score":
+                score,
+
+            "level":
+                level,
 
             "reasons":
                 reasons,
@@ -1352,30 +1556,67 @@ def review_queue():
             "recommendations":
                 recommendations,
 
+            "ml_status":
+                ml_label,
+
+            "ml_label":
+                ml_label,
+
+            "anomaly_score":
+                anomaly_score,
+
             "ml_result":
                 ml_result,
+
+            "warning_score":
+                warning_score,
+
+            "early_warning_score":
+                warning_score,
+
+            "warning_level":
+                warning_level,
+
+            "early_warning_level":
+                warning_level,
+
+            "indicators":
+                indicators,
 
             "early_warning":
                 early_warning,
 
             "review_status":
-                get_review_status(
-                    project.get(
-                        "project_code",
-                        ""
-                    )
-                )
+                review_status,
+
+            "project":
+                project
         })
 
+    # --------------------------------------------------------
+    # SORT
+    # --------------------------------------------------------
+
     review_items.sort(
-        key=lambda x: x.get(
-            "score",
-            0
+        key=lambda item: (
+            item.get(
+                "risk_score",
+                0
+            ),
+            item.get(
+                "warning_score",
+                0
+            )
         ),
         reverse=True
     )
 
+    # --------------------------------------------------------
+    # SEND TO TEMPLATE
+    # --------------------------------------------------------
+
     return render_template(
+
         "review_queue.html",
 
         review_items=
@@ -1385,7 +1626,19 @@ def review_queue():
             review_items,
 
         review_queue=
-            review_items
+            review_items,
+
+        total_reviews=
+            total_reviews,
+
+        high_risk_count=
+            high_risk_count,
+
+        medium_risk_count=
+            medium_risk_count,
+
+        ml_anomaly_count=
+            ml_anomaly_count
     )
 
 
@@ -1410,7 +1663,9 @@ def audit():
     conn.close()
 
     audit_records = [
+
         dict(row)
+
         for row in rows
     ]
 
@@ -1508,12 +1763,15 @@ def districts():
         ).upper()
 
         if level == "HIGH":
+
             data["high"] += 1
 
         elif level == "MEDIUM":
+
             data["medium"] += 1
 
         else:
+
             data["low"] += 1
 
         if ml_result.get(
@@ -1534,12 +1792,15 @@ def districts():
         )
 
         if risk_score >= 60:
+
             risk_level = "HIGH"
 
         elif risk_score >= 30:
+
             risk_level = "MEDIUM"
 
         else:
+
             risk_level = "LOW"
 
         district_list.append({

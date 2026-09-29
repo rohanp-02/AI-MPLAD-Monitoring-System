@@ -5,9 +5,10 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-    <title>Review Queue - AI-Powered MPLAD Monitoring</title>
+    <title>Review Queue - AI MPLAD Monitoring System</title>
 
     <style>
 
@@ -18,232 +19,168 @@
         body {
             margin: 0;
             font-family: Arial, Helvetica, sans-serif;
-            background: #f5f7fb;
-            color: #1e293b;
+            background: #f4f7fb;
+            color: #111827;
         }
 
-        /* =========================
+        /* =====================================================
            NAVBAR
-        ========================= */
+        ===================================================== */
 
         .navbar {
-            background: #0f172a;
-            color: white;
-            padding: 16px 30px;
+            height: 64px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 20px;
-            flex-wrap: wrap;
+            padding: 0 28px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         .brand {
-            font-size: 19px;
-            font-weight: bold;
+            font-size: 20px;
+            font-weight: 700;
+            color: #173b8f;
         }
 
         .brand span {
-            display: block;
-            font-size: 12px;
-            font-weight: normal;
-            color: #cbd5e1;
-            margin-top: 4px;
+            color: #111827;
         }
 
         .nav-right {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 18px;
         }
 
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .nav-links a {
-            color: #cbd5e1;
-            text-decoration: none;
-            padding: 9px 12px;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-
-        .nav-links a:hover,
-        .nav-links a.active {
-            background: #1e293b;
-            color: white;
-        }
-
-        /* =========================
-           PROFILE
-        ========================= */
-
-        .profile {
-            position: relative;
-        }
-
-        .profile-button {
-            background: #1e293b;
-            color: white;
-            border: 1px solid #334155;
-            padding: 9px 13px;
-            border-radius: 7px;
-            cursor: pointer;
+        .role {
             font-size: 13px;
-            white-space: nowrap;
-        }
-
-        .profile-menu {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: 42px;
-            background: white;
-            color: #1e293b;
-            min-width: 220px;
-            border-radius: 8px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-            padding: 15px;
-            z-index: 1000;
-        }
-
-        .profile:hover .profile-menu {
-            display: block;
-        }
-
-        .profile-name {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .profile-role {
-            font-size: 13px;
-            color: #64748b;
-            margin-bottom: 12px;
+            color: #6b7280;
         }
 
         .logout {
-            display: block;
             text-decoration: none;
-            background: #ef4444;
-            color: white;
-            text-align: center;
-            padding: 8px;
-            border-radius: 6px;
-            font-size: 13px;
-        }
-
-        /* =========================
-           CONTAINER
-        ========================= */
-
-        .container {
-            max-width: 1250px;
-            margin: auto;
-            padding: 30px;
-        }
-
-        .page-header {
-            margin-bottom: 25px;
-        }
-
-        .page-header h1 {
-            margin: 0;
-            font-size: 30px;
-            color: #0f172a;
-        }
-
-        .page-header p {
-            margin-top: 8px;
-            color: #64748b;
-        }
-
-        /* =========================
-           INFO BOX
-        ========================= */
-
-        .info-box {
-            background: #eff6ff;
-            border-left: 4px solid #2563eb;
-            padding: 16px;
-            border-radius: 7px;
-            margin-bottom: 25px;
-        }
-
-        .info-box strong {
-            display: block;
-            margin-bottom: 5px;
-            color: #1e3a8a;
-        }
-
-        .info-box p {
-            margin: 0;
-            color: #475569;
+            color: #2563eb;
+            font-weight: 600;
             font-size: 14px;
         }
 
-        /* =========================
-           SUMMARY
-        ========================= */
+        /* =====================================================
+           MAIN
+        ===================================================== */
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 28px 24px 50px;
+        }
+
+        .page-title {
+            margin-bottom: 6px;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .page-subtitle {
+            color: #6b7280;
+            margin-bottom: 22px;
+            font-size: 14px;
+        }
+
+        /* =====================================================
+           INFO BOX
+        ===================================================== */
+
+        .info-box {
+            background: #eef5ff;
+            border-left: 4px solid #2563eb;
+            border-radius: 6px;
+            padding: 14px 16px;
+            margin-bottom: 24px;
+        }
+
+        .info-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #174ea6;
+            margin-bottom: 5px;
+        }
+
+        .info-text {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #374151;
+        }
+
+        /* =====================================================
+           SUMMARY CARDS
+        ===================================================== */
 
         .summary-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
+            gap: 16px;
+            margin-bottom: 26px;
         }
 
         .summary-card {
-            background: white;
+            background: #ffffff;
+            border-radius: 12px;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+            border: 1px solid #edf0f4;
         }
 
-        .summary-title {
-            font-size: 13px;
+        .summary-label {
+            font-size: 14px;
             color: #64748b;
             margin-bottom: 8px;
         }
 
         .summary-value {
-            font-size: 27px;
-            font-weight: bold;
-            color: #0f172a;
+            font-size: 28px;
+            font-weight: 700;
+            color: #111827;
         }
 
-        /* =========================
-           TABLE
-        ========================= */
+        /* =====================================================
+           QUEUE CARD
+        ===================================================== */
 
-        .section {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+        .queue-card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+            border: 1px solid #edf0f4;
             overflow: hidden;
         }
 
-        .section-header {
+        .queue-header {
             padding: 20px;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e5e7eb;
         }
 
-        .section-header h2 {
+        .queue-title {
+            font-size: 21px;
+            font-weight: 700;
+            margin: 0 0 5px;
+        }
+
+        .queue-subtitle {
+            font-size: 14px;
+            color: #6b7280;
             margin: 0;
-            font-size: 20px;
-            color: #0f172a;
         }
 
-        .section-header p {
-            margin: 6px 0 0;
-            color: #64748b;
-            font-size: 13px;
-        }
+        /* =====================================================
+           TABLE
+        ===================================================== */
 
         .table-wrapper {
+            width: 100%;
             overflow-x: auto;
         }
 
@@ -254,73 +191,71 @@
         }
 
         th {
+            text-align: left;
+            padding: 14px;
             background: #f8fafc;
             color: #475569;
             font-size: 12px;
             text-transform: uppercase;
-            letter-spacing: 0.4px;
-            text-align: left;
-            padding: 14px;
+            letter-spacing: 0.3px;
             border-bottom: 1px solid #e2e8f0;
         }
 
         td {
-            padding: 15px 14px;
-            border-bottom: 1px solid #e2e8f0;
-            font-size: 14px;
+            padding: 16px 14px;
+            border-bottom: 1px solid #e5e7eb;
             vertical-align: top;
+            font-size: 14px;
         }
 
-        tr:hover {
-            background: #f8fafc;
+        tr:last-child td {
+            border-bottom: none;
         }
 
         .project-code {
-            font-weight: bold;
             color: #2563eb;
+            font-weight: 700;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 5px;
         }
 
         .project-name {
-            font-weight: 600;
-            margin-top: 4px;
-            color: #0f172a;
+            font-weight: 700;
+            color: #111827;
+            line-height: 1.4;
         }
 
         .category {
             color: #64748b;
-            font-size: 13px;
         }
 
-        /* =========================
+        /* =====================================================
            BADGES
-        ========================= */
+        ===================================================== */
 
         .badge {
             display: inline-block;
-            padding: 5px 9px;
+            padding: 5px 10px;
             border-radius: 20px;
             font-size: 11px;
-            font-weight: bold;
+            font-weight: 700;
+            white-space: nowrap;
         }
 
         .badge-high {
             background: #fee2e2;
-            color: #b91c1c;
+            color: #dc2626;
         }
 
         .badge-medium {
             background: #fef3c7;
-            color: #92400e;
+            color: #b45309;
         }
 
         .badge-low {
             background: #dcfce7;
-            color: #166534;
-        }
-
-        .badge-anomaly {
-            background: #ede9fe;
-            color: #6d28d9;
+            color: #15803d;
         }
 
         .badge-normal {
@@ -328,85 +263,119 @@
             color: #475569;
         }
 
-        .badge-review {
+        .badge-anomaly {
+            background: #ede9fe;
+            color: #7c3aed;
+        }
+
+        .badge-verified {
             background: #dbeafe;
-            color: #1d4ed8;
+            color: #2563eb;
         }
 
-        /* =========================
-           INDICATORS
-        ========================= */
-
-        .indicator {
-            margin-bottom: 5px;
-            color: #475569;
-            font-size: 13px;
+        .badge-pending {
+            background: #dbeafe;
+            color: #2563eb;
         }
 
-        .indicator:last-child {
-            margin-bottom: 0;
+        .badge-flagged {
+            background: #fef3c7;
+            color: #b45309;
         }
 
-        /* =========================
-           BUTTONS
-        ========================= */
-
-        .button {
-            display: inline-block;
-            text-decoration: none;
-            background: #2563eb;
-            color: white;
-            padding: 8px 13px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 600;
+        .badge-escalated {
+            background: #fee2e2;
+            color: #dc2626;
         }
 
-        .button:hover {
-            background: #1d4ed8;
+        .badge-under {
+            background: #e0f2fe;
+            color: #0369a1;
         }
 
-        /* =========================
-           EMPTY STATE
-        ========================= */
+        /* =====================================================
+           RISK
+        ===================================================== */
 
-        .empty {
-            text-align: center;
-            padding: 55px 20px;
-        }
-
-        .empty-icon {
-            font-size: 42px;
-            margin-bottom: 12px;
-        }
-
-        .empty h3 {
-            margin: 0 0 8px;
-            color: #0f172a;
-        }
-
-        .empty p {
-            margin: 0;
-            color: #64748b;
+        .risk-number {
+            margin-top: 7px;
+            font-weight: 700;
             font-size: 14px;
         }
 
-        /* =========================
-           FOOTER NOTE
-        ========================= */
+        /* =====================================================
+           EARLY WARNING
+        ===================================================== */
 
-        .footer-note {
-            margin-top: 20px;
+        .warning-score {
+            margin-top: 7px;
             color: #64748b;
-            font-size: 12px;
-            text-align: center;
+            font-size: 13px;
         }
 
-        /* =========================
-           RESPONSIVE
-        ========================= */
+        .warning-text {
+            margin-top: 6px;
+            font-size: 13px;
+            color: #111827;
+            line-height: 1.4;
+        }
 
-        @media (max-width: 1000px) {
+        /* =====================================================
+           ACTION BUTTON
+        ===================================================== */
+
+        .review-btn {
+            display: inline-block;
+            background: #2563eb;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 9px 15px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 700;
+            border: none;
+        }
+
+        .review-btn:hover {
+            background: #1d4ed8;
+        }
+
+        /* =====================================================
+           EMPTY STATE
+        ===================================================== */
+
+        .empty-state {
+            padding: 50px 20px;
+            text-align: center;
+            color: #64748b;
+        }
+
+        .empty-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        /* =====================================================
+           FOOTNOTE
+        ===================================================== */
+
+        .note {
+            margin-top: 18px;
+            padding: 12px 15px;
+            background: #f8fafc;
+            border-radius: 7px;
+            font-size: 12px;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 900px) {
 
             .summary-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -414,40 +383,22 @@
 
         }
 
-        @media (max-width: 800px) {
+        @media (max-width: 600px) {
 
             .navbar {
-                padding: 15px;
+                padding: 0 15px;
             }
 
             .container {
-                padding: 15px;
+                padding: 20px 14px 40px;
             }
-
-            .nav-right {
-                width: 100%;
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .nav-links {
-                width: 100%;
-            }
-
-            .profile {
-                align-self: flex-end;
-            }
-
-            .page-header h1 {
-                font-size: 24px;
-            }
-
-        }
-
-        @media (max-width: 550px) {
 
             .summary-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .page-title {
+                font-size: 23px;
             }
 
         }
@@ -461,126 +412,31 @@
 
 
 <!-- =========================================================
-     NAVIGATION
+     NAVBAR
 ========================================================= -->
 
 <div class="navbar">
 
     <div class="brand">
-
-        AI-Powered MPLAD Monitoring System
-
-        <span>
-            AI-assisted monitoring with human verification
-        </span>
-
+        AI-MPLAD <span>Monitoring System</span>
     </div>
-
 
     <div class="nav-right">
 
-        <div class="nav-links">
+        <div class="role">
 
-            <!-- DASHBOARD -->
-            <a href="{{ url_for('dashboard') }}">
-                Dashboard
-            </a>
+            {{ current_username or "User" }}
 
-
-            <!-- PROJECTS -->
-            <a href="{{ url_for('projects') }}">
-                Projects
-            </a>
-
-
-            <!-- REVIEW QUEUE -->
-            {% if session.get('role') in [
-                'Verification Officer',
-                'Supervisor',
-                'Admin'
-            ] %}
-
-                <a
-                    href="{{ url_for('review_queue') }}"
-                    class="active"
-                >
-                    Review Queue
-                </a>
-
-            {% endif %}
-
-
-            <!-- DISTRICTS -->
-            {% if session.get('role') in [
-                'Verification Officer',
-                'Supervisor',
-                'Admin'
-            ] %}
-
-                <a href="{{ url_for('districts') }}">
-                    Districts
-                </a>
-
-            {% endif %}
-
-
-            <!-- AUDIT -->
-            {% if session.get('role') in [
-                'Supervisor',
-                'Admin'
-            ] %}
-
-                <a href="{{ url_for('audit') }}">
-                    Audit Trail
-                </a>
-
+            {% if current_role %}
+                — {{ current_role }}
             {% endif %}
 
         </div>
 
-
-        <!-- PROFILE -->
-
-        <div class="profile">
-
-            <button class="profile-button">
-
-                👤
-                {{ session.get('role', 'User') }}
-                ▾
-
-            </button>
-
-
-            <div class="profile-menu">
-
-                <div class="profile-name">
-
-                    {{ session.get('username', 'User') }}
-
-                </div>
-
-
-                <div class="profile-role">
-
-                    Role:
-                    {{ session.get('role', 'User') }}
-
-                </div>
-
-
-                <a
-                    href="{{ url_for('logout') }}"
-                    class="logout"
-                >
-
-                    Logout
-
-                </a>
-
-            </div>
-
-        </div>
+        <a href="{{ url_for('logout') }}"
+           class="logout">
+            Logout
+        </a>
 
     </div>
 
@@ -588,45 +444,40 @@
 
 
 <!-- =========================================================
-     MAIN CONTENT
+     MAIN
 ========================================================= -->
 
 <div class="container">
 
 
-    <!-- PAGE HEADER -->
+    <div class="page-title">
+        Review Queue
+    </div>
 
-    <div class="page-header">
-
-        <h1>
-            Review Queue
-        </h1>
-
-        <p>
-            Projects requiring additional monitoring,
-            verification or administrative review.
-        </p>
-
+    <div class="page-subtitle">
+        Projects requiring human verification based on AI-assisted monitoring.
     </div>
 
 
     <!-- =====================================================
-         INFORMATION
+         INFO
     ====================================================== -->
 
     <div class="info-box">
 
-        <strong>
+        <div class="info-title">
             AI-Assisted Review
-        </strong>
+        </div>
 
-        <p>
+        <div class="info-text">
+
             Projects are placed in this queue based on
             rule-based risk indicators, machine-learning
             anomaly detection and early-warning signals.
-            These indicators support human verification and
-            do not by themselves establish fraud or wrongdoing.
-        </p>
+            These indicators support human verification
+            and do not by themselves establish fraud or wrongdoing.
+
+        </div>
 
     </div>
 
@@ -635,80 +486,68 @@
          SUMMARY
     ====================================================== -->
 
-    {% set queue_count = review_items|length %}
-
-    {% set high_count = 0 %}
-    {% set medium_count = 0 %}
-    {% set anomaly_count = 0 %}
-
-    {% for item in review_items %}
-
-        {% if item.level == "HIGH" %}
-            {% set high_count = high_count + 1 %}
-        {% elif item.level == "MEDIUM" %}
-            {% set medium_count = medium_count + 1 %}
-        {% endif %}
-
-        {% if item.ml_result and item.ml_result.label == "ANOMALY" %}
-            {% set anomaly_count = anomaly_count + 1 %}
-        {% endif %}
-
-    {% endfor %}
-
-
     <div class="summary-grid">
 
 
+        <!-- TOTAL -->
+
         <div class="summary-card">
 
-            <div class="summary-title">
+            <div class="summary-label">
                 Projects Requiring Review
             </div>
 
             <div class="summary-value">
-                {{ queue_count }}
+                {{ total_reviews }}
             </div>
 
         </div>
 
 
+        <!-- HIGH -->
+
         <div class="summary-card">
 
-            <div class="summary-title">
+            <div class="summary-label">
                 High Risk
             </div>
 
             <div class="summary-value">
-                {{ high_count }}
+                {{ high_risk_count }}
             </div>
 
         </div>
 
 
+        <!-- MEDIUM -->
+
         <div class="summary-card">
 
-            <div class="summary-title">
+            <div class="summary-label">
                 Medium Risk
             </div>
 
             <div class="summary-value">
-                {{ medium_count }}
+                {{ medium_risk_count }}
             </div>
 
         </div>
 
 
+        <!-- ML -->
+
         <div class="summary-card">
 
-            <div class="summary-title">
+            <div class="summary-label">
                 ML Anomalies
             </div>
 
             <div class="summary-value">
-                {{ anomaly_count }}
+                {{ ml_anomaly_count }}
             </div>
 
         </div>
+
 
     </div>
 
@@ -717,16 +556,16 @@
          REVIEW TABLE
     ====================================================== -->
 
-    <div class="section">
+    <div class="queue-card">
 
 
-        <div class="section-header">
+        <div class="queue-header">
 
-            <h2>
+            <h2 class="queue-title">
                 Priority Review Queue
             </h2>
 
-            <p>
+            <p class="queue-subtitle">
                 Review projects flagged by the monitoring engine.
             </p>
 
@@ -782,253 +621,203 @@
 
                 {% for item in review_items %}
 
-                    {% set project = item.project %}
-
-                    {% set warning = item.early_warning %}
-
-                    <tr>
+                <tr>
 
 
-                        <!-- PROJECT -->
+                    <!-- PROJECT -->
 
-                        <td>
+                    <td>
 
-                            <div class="project-code">
+                        <a href="{{ url_for('project_detail', project_id=item.id) }}"
+                           class="project-code">
 
-                                {{ project.project_code }}
+                            {{ item.project_code }}
+
+                        </a>
+
+                        <div class="project-name">
+
+                            {{ item.project_name }}
+
+                        </div>
+
+                    </td>
+
+
+                    <!-- CATEGORY -->
+
+                    <td>
+
+                        <div class="category">
+
+                            {{ item.category }}
+
+                        </div>
+
+                    </td>
+
+
+                    <!-- RISK -->
+
+                    <td>
+
+                        {% if item.risk_level == "HIGH" %}
+
+                            <span class="badge badge-high">
+                                HIGH
+                            </span>
+
+                        {% elif item.risk_level == "MEDIUM" %}
+
+                            <span class="badge badge-medium">
+                                MEDIUM
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge badge-low">
+                                LOW
+                            </span>
+
+                        {% endif %}
+
+
+                        <div class="risk-number">
+
+                            {{ "%.1f"|format(item.risk_score|float) }}/100
+
+                        </div>
+
+                    </td>
+
+
+                    <!-- AI STATUS -->
+
+                    <td>
+
+                        {% if item.ml_status == "ANOMALY" %}
+
+                            <span class="badge badge-anomaly">
+                                ML ANOMALY
+                            </span>
+
+                            <div class="warning-score">
+
+                                Score:
+                                {{ "%.1f"|format(item.anomaly_score|float) }}
 
                             </div>
 
-                            <div class="project-name">
+                        {% else %}
 
-                                {{ project.project_name }}
+                            <span class="badge badge-normal">
+                                NORMAL
+                            </span>
 
-                            </div>
+                        {% endif %}
 
-                        </td>
-
-
-                        <!-- CATEGORY -->
-
-                        <td>
-
-                            <div class="category">
-
-                                {{ project.category }}
-
-                            </div>
-
-                        </td>
+                    </td>
 
 
-                        <!-- RISK -->
+                    <!-- EARLY WARNING -->
 
-                        <td>
+                    <td>
 
-                            {% if item.level == "HIGH" %}
+                        {% if item.warning_level == "HIGH" %}
 
-                                <span class="badge badge-high">
-                                    HIGH
-                                </span>
+                            <span class="badge badge-high">
+                                HIGH
+                            </span>
 
-                            {% elif item.level == "MEDIUM" %}
+                        {% elif item.warning_level == "MEDIUM" %}
 
-                                <span class="badge badge-medium">
-                                    MEDIUM
-                                </span>
+                            <span class="badge badge-medium">
+                                MEDIUM
+                            </span>
 
-                            {% else %}
+                        {% else %}
 
-                                <span class="badge badge-low">
-                                    LOW
-                                </span>
+                            <span class="badge badge-low">
+                                LOW
+                            </span>
 
-                            {% endif %}
+                        {% endif %}
 
 
-                            <div style="margin-top:7px;">
+                        <div class="warning-score">
 
-                                <strong>
-                                    {{ item.score }}/100
-                                </strong>
+                            {{ "%.0f"|format(item.warning_score|float) }}/100
+
+                        </div>
+
+
+                        {% if item.indicators %}
+
+                            <div class="warning-text">
+
+                                {{ item.indicators[0] }}
 
                             </div>
 
-                        </td>
+                        {% endif %}
 
+                    </td>
 
-                        <!-- ML STATUS -->
 
-                        <td>
+                    <!-- REVIEW STATUS -->
 
-                            {% if item.ml_result %}
+                    <td>
 
-                                {% if item.ml_result.label == "ANOMALY" %}
+                        {% if item.review_status == "VERIFIED" %}
 
-                                    <span class="badge badge-anomaly">
+                            <span class="badge badge-verified">
+                                VERIFIED
+                            </span>
 
-                                        ML ANOMALY
+                        {% elif item.review_status == "FLAGGED" %}
 
-                                    </span>
+                            <span class="badge badge-flagged">
+                                FLAGGED
+                            </span>
 
-                                    {% if item.ml_result.anomaly_score is defined %}
+                        {% elif item.review_status == "ESCALATED" %}
 
-                                        <div
-                                            style="
-                                                margin-top:7px;
-                                                font-size:12px;
-                                                color:#64748b;
-                                            "
-                                        >
+                            <span class="badge badge-escalated">
+                                ESCALATED
+                            </span>
 
-                                            Score:
-                                            {{ item.ml_result.anomaly_score }}
+                        {% elif item.review_status == "UNDER VERIFICATION" %}
 
-                                        </div>
+                            <span class="badge badge-under">
+                                UNDER VERIFICATION
+                            </span>
 
-                                    {% endif %}
+                        {% else %}
 
-                                {% else %}
+                            <span class="badge badge-pending">
+                                PENDING REVIEW
+                            </span>
 
-                                    <span class="badge badge-normal">
+                        {% endif %}
 
-                                        NORMAL
+                    </td>
 
-                                    </span>
 
-                                {% endif %}
+                    <!-- ACTION -->
 
-                            {% else %}
+                    <td>
 
-                                <span class="badge badge-normal">
+                        <a href="{{ url_for('project_detail', project_id=item.id) }}"
+                           class="review-btn">
 
-                                    NORMAL
+                            Review
 
-                                </span>
+                        </a>
 
-                            {% endif %}
+                    </td>
 
-                        </td>
 
-
-                        <!-- EARLY WARNING -->
-
-                        <td>
-
-                            {% if warning %}
-
-                                {% if warning.level == "HIGH" %}
-
-                                    <span class="badge badge-high">
-                                        HIGH
-                                    </span>
-
-                                {% elif warning.level == "MEDIUM" %}
-
-                                    <span class="badge badge-medium">
-                                        MEDIUM
-                                    </span>
-
-                                {% else %}
-
-                                    <span class="badge badge-low">
-                                        LOW
-                                    </span>
-
-                                {% endif %}
-
-
-                                <div
-                                    style="
-                                        margin-top:7px;
-                                        font-size:12px;
-                                        color:#64748b;
-                                    "
-                                >
-
-                                    {{ warning.score }}/100
-
-                                </div>
-
-
-                                {% if warning.indicators %}
-
-                                    <div
-                                        style="
-                                            margin-top:7px;
-                                            font-size:12px;
-                                        "
-                                    >
-
-                                        {{ warning.indicators[0] }}
-
-                                    </div>
-
-                                {% endif %}
-
-                            {% else %}
-
-                                <span
-                                    style="
-                                        color:#64748b;
-                                        font-size:13px;
-                                    "
-                                >
-
-                                    No early warning
-
-                                </span>
-
-                            {% endif %}
-
-                        </td>
-
-
-                        <!-- REVIEW STATUS -->
-
-                        <td>
-
-                            {% if item.review_status %}
-
-                                <span class="badge badge-review">
-
-                                    {{ item.review_status }}
-
-                                </span>
-
-                            {% else %}
-
-                                <span class="badge badge-review">
-
-                                    PENDING REVIEW
-
-                                </span>
-
-                            {% endif %}
-
-                        </td>
-
-
-                        <!-- ACTION -->
-
-                        <td>
-
-                            <a
-                                href="{{ url_for(
-                                    'project_detail',
-                                    project_id=project.id
-                                ) }}"
-                                class="button"
-                            >
-
-                                Review
-
-                            </a>
-
-                        </td>
-
-
-                    </tr>
+                </tr>
 
                 {% endfor %}
 
@@ -1043,22 +832,16 @@
         {% else %}
 
 
-        <!-- EMPTY STATE -->
+        <div class="empty-state">
 
-        <div class="empty">
-
-            <div class="empty-icon">
-                ✓
+            <div class="empty-title">
+                No Projects Require Review
             </div>
 
-            <h3>
-                No Projects Require Priority Review
-            </h3>
-
-            <p>
-                Current monitoring indicators do not identify
-                projects requiring additional review.
-            </p>
+            <div>
+                All monitored projects are currently
+                within the defined review thresholds.
+            </div>
 
         </div>
 
@@ -1069,11 +852,17 @@
     </div>
 
 
-    <div class="footer-note">
+    <!-- =====================================================
+         NOTE
+    ====================================================== -->
 
-        AI indicators support authorized human officials.
-        Final verification and administrative decisions remain
-        with authorized officials.
+    <div class="note">
+
+        <strong>Note:</strong>
+        AI-generated risk scores, anomaly indicators and
+        early-warning signals are decision-support indicators.
+        Final verification and action remain with the authorized
+        government officer.
 
     </div>
 
