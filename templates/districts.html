@@ -7,11 +7,10 @@
 
     <title>District Analytics - AI-Powered MPLAD Monitoring</title>
 
-    <!-- Leaflet Map -->
     <link
         rel="stylesheet"
         href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    />
+    >
 
     <style>
 
@@ -26,9 +25,7 @@
             color: #1e293b;
         }
 
-        /* =========================
-           NAVBAR
-        ========================= */
+        /* NAVBAR */
 
         .navbar {
             background: #0f172a;
@@ -81,9 +78,7 @@
             color: white;
         }
 
-        /* =========================
-           PROFILE
-        ========================= */
+        /* PROFILE */
 
         .profile {
             position: relative;
@@ -140,9 +135,7 @@
             font-size: 13px;
         }
 
-        /* =========================
-           CONTAINER
-        ========================= */
+        /* CONTAINER */
 
         .container {
             max-width: 1250px;
@@ -165,9 +158,7 @@
             color: #64748b;
         }
 
-        /* =========================
-           INFO BOX
-        ========================= */
+        /* INFO */
 
         .info-box {
             background: #eff6ff;
@@ -189,9 +180,7 @@
             font-size: 14px;
         }
 
-        /* =========================
-           SUMMARY CARDS
-        ========================= */
+        /* SUMMARY */
 
         .summary-grid {
             display: grid;
@@ -219,9 +208,7 @@
             color: #0f172a;
         }
 
-        /* =========================
-           MAP
-        ========================= */
+        /* MAP */
 
         .map-section {
             background: white;
@@ -251,6 +238,7 @@
         #districtMap {
             width: 100%;
             height: 450px;
+            background: #e2e8f0;
         }
 
         .map-note {
@@ -261,9 +249,7 @@
             border-top: 1px solid #e2e8f0;
         }
 
-        /* =========================
-           TABLE SECTION
-        ========================= */
+        /* TABLE */
 
         .section {
             background: white;
@@ -329,9 +315,7 @@
             font-weight: 600;
         }
 
-        /* =========================
-           BADGES
-        ========================= */
+        /* BADGES */
 
         .badge {
             display: inline-block;
@@ -362,9 +346,7 @@
             color: #6d28d9;
         }
 
-        /* =========================
-           RISK BAR
-        ========================= */
+        /* RISK */
 
         .risk-bar {
             width: 120px;
@@ -381,9 +363,7 @@
             border-radius: 10px;
         }
 
-        /* =========================
-           EMPTY
-        ========================= */
+        /* EMPTY */
 
         .empty {
             text-align: center;
@@ -406,9 +386,7 @@
             font-size: 14px;
         }
 
-        /* =========================
-           FOOTER
-        ========================= */
+        /* FOOTER */
 
         .footer-note {
             margin-top: 20px;
@@ -417,9 +395,7 @@
             text-align: center;
         }
 
-        /* =========================
-           RESPONSIVE
-        ========================= */
+        /* RESPONSIVE */
 
         @media (max-width: 1000px) {
 
@@ -475,13 +451,9 @@
 
 </head>
 
-
 <body>
 
-
-<!-- =========================
-     NAVBAR
-========================= -->
+<!-- NAVBAR -->
 
 <div class="navbar">
 
@@ -495,7 +467,6 @@
 
     </div>
 
-
     <div class="nav-right">
 
         <div class="nav-links">
@@ -508,7 +479,6 @@
                 Projects
             </a>
 
-
             {% if session.get('role') in [
                 'Verification Officer',
                 'Supervisor',
@@ -520,7 +490,6 @@
                 </a>
 
             {% endif %}
-
 
             {% if session.get('role') in [
                 'Verification Officer',
@@ -537,7 +506,6 @@
 
             {% endif %}
 
-
             {% if session.get('role') in [
                 'Supervisor',
                 'Admin'
@@ -551,7 +519,6 @@
 
         </div>
 
-
         <div class="profile">
 
             <button class="profile-button">
@@ -561,7 +528,6 @@
                 ▾
 
             </button>
-
 
             <div class="profile-menu">
 
@@ -590,12 +556,9 @@
 </div>
 
 
-<!-- =========================
-     MAIN
-========================= -->
+<!-- MAIN -->
 
 <div class="container">
-
 
     <div class="page-header">
 
@@ -627,34 +590,23 @@
     </div>
 
 
-    <!-- =========================
-         SUMMARY DATA
-    ========================= -->
+    <!-- SUMMARY -->
 
-    {% set total_districts = districts|length %}
-    {% set total_district_projects = 0 %}
-    {% set total_high = 0 %}
-    {% set total_medium = 0 %}
-    {% set total_anomalies = 0 %}
-
+    {% set ns = namespace(
+        projects=0,
+        high=0,
+        medium=0,
+        low=0,
+        anomalies=0
+    ) %}
 
     {% for district in districts %}
 
-        {% set total_district_projects =
-            total_district_projects + district.projects
-        %}
-
-        {% set total_high =
-            total_high + district.high
-        %}
-
-        {% set total_medium =
-            total_medium + district.medium
-        %}
-
-        {% set total_anomalies =
-            total_anomalies + district.anomalies
-        %}
+        {% set ns.projects = ns.projects + (district.projects | int) %}
+        {% set ns.high = ns.high + (district.high | int) %}
+        {% set ns.medium = ns.medium + (district.medium | int) %}
+        {% set ns.low = ns.low + (district.low | int) %}
+        {% set ns.anomalies = ns.anomalies + (district.anomalies | int) %}
 
     {% endfor %}
 
@@ -668,7 +620,7 @@
             </div>
 
             <div class="summary-value">
-                {{ total_districts }}
+                {{ districts | length }}
             </div>
 
         </div>
@@ -681,7 +633,7 @@
             </div>
 
             <div class="summary-value">
-                {{ total_district_projects }}
+                {{ ns.projects }}
             </div>
 
         </div>
@@ -694,7 +646,7 @@
             </div>
 
             <div class="summary-value">
-                {{ total_high }}
+                {{ ns.high }}
             </div>
 
         </div>
@@ -707,7 +659,7 @@
             </div>
 
             <div class="summary-value">
-                {{ total_anomalies }}
+                {{ ns.anomalies }}
             </div>
 
         </div>
@@ -715,9 +667,7 @@
     </div>
 
 
-    <!-- =========================
-         MAP
-    ========================= -->
+    <!-- MAP -->
 
     <div class="map-section">
 
@@ -733,9 +683,7 @@
 
         </div>
 
-
         <div id="districtMap"></div>
-
 
         <div class="map-note">
 
@@ -747,9 +695,7 @@
     </div>
 
 
-    <!-- =========================
-         DISTRICT TABLE
-    ========================= -->
+    <!-- TABLE -->
 
     <div class="section">
 
@@ -789,7 +735,6 @@
 
                 </thead>
 
-
                 <tbody>
 
                 {% for district in districts %}
@@ -804,7 +749,6 @@
 
                         </td>
 
-
                         <td>
 
                             <span class="number">
@@ -812,7 +756,6 @@
                             </span>
 
                         </td>
-
 
                         <td>
 
@@ -830,7 +773,6 @@
 
                         </td>
 
-
                         <td>
 
                             {% if district.medium > 0 %}
@@ -846,7 +788,6 @@
                             {% endif %}
 
                         </td>
-
 
                         <td>
 
@@ -864,7 +805,6 @@
 
                         </td>
 
-
                         <td>
 
                             {% if district.anomalies > 0 %}
@@ -880,7 +820,6 @@
                             {% endif %}
 
                         </td>
-
 
                         <td>
 
@@ -900,7 +839,7 @@
 
                                     <div
                                         class="risk-fill"
-                                        style="width: {{ average_risk }}%;"
+                                        style="width: {{ [average_risk, 100]|min }}%;"
                                     ></div>
 
                                 </div>
@@ -922,7 +861,6 @@
             </table>
 
         </div>
-
 
         {% else %}
 
@@ -956,13 +894,10 @@
 
     </div>
 
-
 </div>
 
 
-<!-- =========================
-     LEAFLET JS
-========================= -->
+<!-- LEAFLET -->
 
 <script
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
@@ -971,30 +906,47 @@
 
 <script>
 
-    /*
-       District coordinates.
+document.addEventListener("DOMContentLoaded", function () {
 
-       These are approximate city/district reference
-       points used only to visualize monitoring activity.
-    */
+    const map = L.map("districtMap").setView(
+        [15.3173, 75.7139],
+        6
+    );
+
+
+    L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+            maxZoom: 18,
+            attribution:
+                '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }
+    ).addTo(map);
+
 
     const districtCoordinates = {
 
-        "Bangalore": [12.9716, 77.5946],
-
         "Bangalore Urban": [12.9716, 77.5946],
 
+        "Bangalore": [12.9716, 77.5946],
+
         "Bengaluru": [12.9716, 77.5946],
-
-        "Mysore": [12.2958, 76.6394],
-
-        "Mysuru": [12.2958, 76.6394],
 
         "Tumkur": [13.3409, 77.1010],
 
         "Tumakuru": [13.3409, 77.1010],
 
+        "Kolar": [13.1358, 78.1320],
+
         "Mandya": [12.5218, 76.8951],
+
+        "Chikkaballapur": [13.4355, 77.7315],
+
+        "Mysore": [12.2958, 76.6394],
+
+        "Mysuru": [12.2958, 76.6394],
+
+        "Ramanagara": [12.7150, 77.2800],
 
         "Hassan": [13.0068, 76.1003],
 
@@ -1008,9 +960,9 @@
 
         "Belagavi": [15.8497, 74.4977],
 
-        "Hubli": [15.3647, 75.1240],
-
         "Dharwad": [15.4589, 75.0078],
+
+        "Hubli": [15.3647, 75.1240],
 
         "Kalaburagi": [17.3297, 76.8343],
 
@@ -1019,8 +971,6 @@
         "Raichur": [16.2120, 77.3439],
 
         "Ballari": [15.1394, 76.9214],
-
-        "Kolar": [13.1358, 78.1320],
 
         "Chitradurga": [14.2306, 76.3980],
 
@@ -1033,51 +983,22 @@
     };
 
 
-    /* =========================
-       CREATE MAP
-    ========================= */
-
-    const map = L.map("districtMap").setView(
-        [15.3173, 75.7139],
-        6
-    );
-
-
-    /* =========================
-       MAP TILES
-    ========================= */
-
-    L.tileLayer(
-        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        {
-            maxZoom: 18,
-            attribution:
-                '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        }
-    ).addTo(map);
-
-
-    /* =========================
-       ADD DISTRICT MARKERS
-    ========================= */
-
     const districtsData = {{ districts | tojson }};
 
-    let markers = [];
+    const markers = [];
 
 
-    districtsData.forEach(function(district) {
+    districtsData.forEach(function (district) {
 
         const name = district.district;
 
-        const coordinates =
-            districtCoordinates[name];
+        const coords = districtCoordinates[name];
 
 
-        if (!coordinates) {
+        if (!coords) {
 
             console.warn(
-                "No map coordinates found for:",
+                "No coordinates found for district:",
                 name
             );
 
@@ -1086,57 +1007,68 @@
         }
 
 
-        const popup = `
+        const risk = district.projects > 0
+            ? (
+                district.risk_total /
+                district.projects
+            ).toFixed(1)
+            : "0.0";
 
-            <div style="min-width:220px">
 
-                <h3 style="margin-top:0;">
+        const marker = L.marker(coords)
+            .addTo(map);
+
+
+        marker.bindPopup(`
+
+            <div style="min-width:220px;">
+
+                <h3 style="
+                    margin:0 0 12px 0;
+                    color:#0f172a;
+                ">
                     ${name}
                 </h3>
 
-                <p>
+                <p style="margin:6px 0;">
                     <strong>Projects:</strong>
                     ${district.projects}
                 </p>
 
-                <p>
+                <p style="margin:6px 0;">
                     <strong>High Risk:</strong>
                     ${district.high}
                 </p>
 
-                <p>
+                <p style="margin:6px 0;">
                     <strong>Medium Risk:</strong>
                     ${district.medium}
                 </p>
 
-                <p>
+                <p style="margin:6px 0;">
                     <strong>Low Risk:</strong>
                     ${district.low}
                 </p>
 
-                <p>
+                <p style="margin:6px 0;">
                     <strong>ML Anomalies:</strong>
                     ${district.anomalies}
                 </p>
 
+                <p style="margin:6px 0;">
+                    <strong>Average Risk:</strong>
+                    ${risk}/100
+                </p>
+
             </div>
 
-        `;
-
-
-        const marker = L.marker(coordinates)
-            .addTo(map)
-            .bindPopup(popup);
+        `);
 
 
         markers.push(marker);
 
     });
 
-
-    /* =========================
-       FIT MAP TO MARKERS
-    ========================= */
 
     if (markers.length > 0) {
 
@@ -1149,16 +1081,15 @@
     }
 
 
-    /* Fix rendering when page loads */
-
-    setTimeout(function() {
+    setTimeout(function () {
 
         map.invalidateSize();
 
-    }, 300);
+    }, 500);
+
+});
 
 </script>
-
 
 </body>
 
