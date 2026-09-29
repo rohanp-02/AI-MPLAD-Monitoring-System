@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Review Queue - AI-Powered MPLAD Monitoring</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fb;
+            color: #1e293b;
+        }
+
+        /* =========================
+           NAVBAR
+        ========================= */
+
+        .navbar {
+            background: #0f172a;
+            color: white;
+            padding: 16px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            font-size: 19px;
+            font-weight: bold;
+        }
+
+        .brand span {
+            display: block;
+            font-size: 12px;
+            font-weight: normal;
+            color: #cbd5e1;
+            margin-top: 4px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            padding: 9px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: #1e293b;
+            color: white;
+        }
+
+        /* =========================
+           PROFILE
+        ========================= */
+
+        .profile {
+            position: relative;
+        }
+
+        .profile-button {
+            background: #1e293b;
+            color: white;
+            border: 1px solid #334155;
+            padding: 9px 13px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .profile-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 42px;
+            background: white;
+            color: #1e293b;
+            min-width: 220px;
+            border-radius: 8px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            padding: 15px;
+            z-index: 1000;
+        }
+
+        .profile:hover .profile-menu {
+            display: block;
+        }
+
+        .profile-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .profile-role {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 12px;
+        }
+
+        .logout {
+            display: block;
+            text-decoration: none;
+            background: #ef4444;
+            color: white;
+            text-align: center;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        /* =========================
+           CONTAINER
+        ========================= */
+
+        .container {
+            max-width: 1250px;
+            margin: auto;
+            padding: 30px;
+        }
+
+        .page-header {
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            margin: 0;
+            font-size: 30px;
+            color: #0f172a;
+        }
+
+        .page-header p {
+            margin-top: 8px;
+            color: #64748b;
+        }
+
+        /* =========================
+           INFO BOX
+        ========================= */
+
+        .info-box {
+            background: #eff6ff;
+            border-left: 4px solid #2563eb;
+            padding: 16px;
+            border-radius: 7px;
+            margin-bottom: 25px;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #1e3a8a;
+        }
+
+        .info-box p {
+            margin: 0;
+            color: #475569;
+            font-size: 14px;
+        }
+
+        /* =========================
+           SUMMARY
+        ========================= */
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+        }
+
+        .summary-title {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .summary-value {
+            font-size: 27px;
+            font-weight: bold;
+            color: #0f172a;
+        }
+
+        /* =========================
+           TABLE
+        ========================= */
+
+        .section {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .section-header h2 {
+            margin: 0;
+            font-size: 20px;
+            color: #0f172a;
+        }
+
+        .section-header p {
+            margin: 6px 0 0;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 950px;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #475569;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            text-align: left;
+            padding: 14px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        td {
+            padding: 15px 14px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+            vertical-align: top;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        .project-code {
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .project-name {
+            font-weight: 600;
+            margin-top: 4px;
+            color: #0f172a;
+        }
+
+        .category {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        /* =========================
+           BADGES
+        ========================= */
+
+        .badge {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .badge-high {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .badge-medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-low {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-anomaly {
+            background: #ede9fe;
+            color: #6d28d9;
+        }
+
+        .badge-normal {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        .badge-review {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        /* =========================
+           INDICATORS
+        ========================= */
+
+        .indicator {
+            margin-bottom: 5px;
+            color: #475569;
+            font-size: 13px;
+        }
+
+        .indicator:last-child {
+            margin-bottom: 0;
+        }
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .button {
+            display: inline-block;
+            text-decoration: none;
+            background: #2563eb;
+            color: white;
+            padding: 8px 13px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .button:hover {
+            background: #1d4ed8;
+        }
+
+        /* =========================
+           EMPTY STATE
+        ========================= */
+
+        .empty {
+            text-align: center;
+            padding: 55px 20px;
+        }
+
+        .empty-icon {
+            font-size: 42px;
+            margin-bottom: 12px;
+        }
+
+        .empty h3 {
+            margin: 0 0 8px;
+            color: #0f172a;
+        }
+
+        .empty p {
+            margin: 0;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* =========================
+           FOOTER NOTE
+        ========================= */
+
+        .footer-note {
+            margin-top: 20px;
+            color: #64748b;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1000px) {
+
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 800px) {
+
+            .navbar {
+                padding: 15px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .nav-right {
+                width: 100%;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .nav-links {
+                width: 100%;
+            }
+
+            .profile {
+                align-self: flex-end;
+            }
+
+            .page-header h1 {
+                font-size: 24px;
+            }
+
+        }
+
+        @media (max-width: 550px) {
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     NAVIGATION
+========================================================= -->
+
+<div class="navbar">
+
+    <div class="brand">
+
+        AI-Powered MPLAD Monitoring System
+
+        <span>
+            AI-assisted monitoring with human verification
+        </span>
+
+    </div>
+
+
+    <div class="nav-right">
+
+        <div class="nav-links">
+
+            <!-- DASHBOARD -->
+            <a href="{{ url_for('dashboard') }}">
+                Dashboard
+            </a>
+
+
+            <!-- PROJECTS -->
+            <a href="{{ url_for('projects') }}">
+                Projects
+            </a>
+
+
+            <!-- REVIEW QUEUE -->
+            {% if session.get('role') in [
+                'Verification Officer',
+                'Supervisor',
+                'Admin'
+            ] %}
+
+                <a
+                    href="{{ url_for('review_queue') }}"
+                    class="active"
+                >
+                    Review Queue
+                </a>
+
+            {% endif %}
+
+
+            <!-- DISTRICTS -->
+            {% if session.get('role') in [
+                'Verification Officer',
+                'Supervisor',
+                'Admin'
+            ] %}
+
+                <a href="{{ url_for('districts') }}">
+                    Districts
+                </a>
+
+            {% endif %}
+
+
+            <!-- AUDIT -->
+            {% if session.get('role') in [
+                'Supervisor',
+                'Admin'
+            ] %}
+
+                <a href="{{ url_for('audit') }}">
+                    Audit Trail
+                </a>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- PROFILE -->
+
+        <div class="profile">
+
+            <button class="profile-button">
+
+                👤
+                {{ session.get('role', 'User') }}
+                ▾
+
+            </button>
+
+
+            <div class="profile-menu">
+
+                <div class="profile-name">
+
+                    {{ session.get('username', 'User') }}
+
+                </div>
+
+
+                <div class="profile-role">
+
+                    Role:
+                    {{ session.get('role', 'User') }}
+
+                </div>
+
+
+                <a
+                    href="{{ url_for('logout') }}"
+                    class="logout"
+                >
+
+                    Logout
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
+<div class="container">
+
+
+    <!-- PAGE HEADER -->
+
+    <div class="page-header">
+
+        <h1>
+            Review Queue
+        </h1>
+
+        <p>
+            Projects requiring additional monitoring,
+            verification or administrative review.
+        </p>
+
+    </div>
+
+
+    <!-- =====================================================
+         INFORMATION
+    ====================================================== -->
+
+    <div class="info-box">
+
+        <strong>
+            AI-Assisted Review
+        </strong>
+
+        <p>
+            Projects are placed in this queue based on
+            rule-based risk indicators, machine-learning
+            anomaly detection and early-warning signals.
+            These indicators support human verification and
+            do not by themselves establish fraud or wrongdoing.
+        </p>
+
+    </div>
+
+
+    <!-- =====================================================
+         SUMMARY
+    ====================================================== -->
+
+    {% set queue_count = review_items|length %}
+
+    {% set high_count = 0 %}
+    {% set medium_count = 0 %}
+    {% set anomaly_count = 0 %}
+
+    {% for item in review_items %}
+
+        {% if item.level == "HIGH" %}
+            {% set high_count = high_count + 1 %}
+        {% elif item.level == "MEDIUM" %}
+            {% set medium_count = medium_count + 1 %}
+        {% endif %}
+
+        {% if item.ml_result and item.ml_result.label == "ANOMALY" %}
+            {% set anomaly_count = anomaly_count + 1 %}
+        {% endif %}
+
+    {% endfor %}
+
+
+    <div class="summary-grid">
+
+
+        <div class="summary-card">
+
+            <div class="summary-title">
+                Projects Requiring Review
+            </div>
+
+            <div class="summary-value">
+                {{ queue_count }}
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-title">
+                High Risk
+            </div>
+
+            <div class="summary-value">
+                {{ high_count }}
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-title">
+                Medium Risk
+            </div>
+
+            <div class="summary-value">
+                {{ medium_count }}
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-title">
+                ML Anomalies
+            </div>
+
+            <div class="summary-value">
+                {{ anomaly_count }}
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         REVIEW TABLE
+    ====================================================== -->
+
+    <div class="section">
+
+
+        <div class="section-header">
+
+            <h2>
+                Priority Review Queue
+            </h2>
+
+            <p>
+                Review projects flagged by the monitoring engine.
+            </p>
+
+        </div>
+
+
+        {% if review_items %}
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Project
+                        </th>
+
+                        <th>
+                            Category
+                        </th>
+
+                        <th>
+                            Risk
+                        </th>
+
+                        <th>
+                            AI Status
+                        </th>
+
+                        <th>
+                            Early Warning
+                        </th>
+
+                        <th>
+                            Review Status
+                        </th>
+
+                        <th>
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                {% for item in review_items %}
+
+                    {% set project = item.project %}
+
+                    {% set warning = item.early_warning %}
+
+                    <tr>
+
+
+                        <!-- PROJECT -->
+
+                        <td>
+
+                            <div class="project-code">
+
+                                {{ project.project_code }}
+
+                            </div>
+
+                            <div class="project-name">
+
+                                {{ project.project_name }}
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- CATEGORY -->
+
+                        <td>
+
+                            <div class="category">
+
+                                {{ project.category }}
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- RISK -->
+
+                        <td>
+
+                            {% if item.level == "HIGH" %}
+
+                                <span class="badge badge-high">
+                                    HIGH
+                                </span>
+
+                            {% elif item.level == "MEDIUM" %}
+
+                                <span class="badge badge-medium">
+                                    MEDIUM
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge badge-low">
+                                    LOW
+                                </span>
+
+                            {% endif %}
+
+
+                            <div style="margin-top:7px;">
+
+                                <strong>
+                                    {{ item.score }}/100
+                                </strong>
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- ML STATUS -->
+
+                        <td>
+
+                            {% if item.ml_result %}
+
+                                {% if item.ml_result.label == "ANOMALY" %}
+
+                                    <span class="badge badge-anomaly">
+
+                                        ML ANOMALY
+
+                                    </span>
+
+                                    {% if item.ml_result.anomaly_score is defined %}
+
+                                        <div
+                                            style="
+                                                margin-top:7px;
+                                                font-size:12px;
+                                                color:#64748b;
+                                            "
+                                        >
+
+                                            Score:
+                                            {{ item.ml_result.anomaly_score }}
+
+                                        </div>
+
+                                    {% endif %}
+
+                                {% else %}
+
+                                    <span class="badge badge-normal">
+
+                                        NORMAL
+
+                                    </span>
+
+                                {% endif %}
+
+                            {% else %}
+
+                                <span class="badge badge-normal">
+
+                                    NORMAL
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- EARLY WARNING -->
+
+                        <td>
+
+                            {% if warning %}
+
+                                {% if warning.level == "HIGH" %}
+
+                                    <span class="badge badge-high">
+                                        HIGH
+                                    </span>
+
+                                {% elif warning.level == "MEDIUM" %}
+
+                                    <span class="badge badge-medium">
+                                        MEDIUM
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge badge-low">
+                                        LOW
+                                    </span>
+
+                                {% endif %}
+
+
+                                <div
+                                    style="
+                                        margin-top:7px;
+                                        font-size:12px;
+                                        color:#64748b;
+                                    "
+                                >
+
+                                    {{ warning.score }}/100
+
+                                </div>
+
+
+                                {% if warning.indicators %}
+
+                                    <div
+                                        style="
+                                            margin-top:7px;
+                                            font-size:12px;
+                                        "
+                                    >
+
+                                        {{ warning.indicators[0] }}
+
+                                    </div>
+
+                                {% endif %}
+
+                            {% else %}
+
+                                <span
+                                    style="
+                                        color:#64748b;
+                                        font-size:13px;
+                                    "
+                                >
+
+                                    No early warning
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- REVIEW STATUS -->
+
+                        <td>
+
+                            {% if item.review_status %}
+
+                                <span class="badge badge-review">
+
+                                    {{ item.review_status }}
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge badge-review">
+
+                                    PENDING REVIEW
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- ACTION -->
+
+                        <td>
+
+                            <a
+                                href="{{ url_for(
+                                    'project_detail',
+                                    project_id=project.id
+                                ) }}"
+                                class="button"
+                            >
+
+                                Review
+
+                            </a>
+
+                        </td>
+
+
+                    </tr>
+
+                {% endfor %}
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        {% else %}
+
+
+        <!-- EMPTY STATE -->
+
+        <div class="empty">
+
+            <div class="empty-icon">
+                ✓
+            </div>
+
+            <h3>
+                No Projects Require Priority Review
+            </h3>
+
+            <p>
+                Current monitoring indicators do not identify
+                projects requiring additional review.
+            </p>
+
+        </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+
+    <div class="footer-note">
+
+        AI indicators support authorized human officials.
+        Final verification and administrative decisions remain
+        with authorized officials.
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

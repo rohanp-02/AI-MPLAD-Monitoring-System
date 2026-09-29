@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - AI-MPLAD</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #172033;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 240px;
+            background: #111827;
+            color: white;
+            padding: 22px 14px;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 2px 0 30px;
+        }
+
+        .nav a {
+            display: block;
+            color: #e5e7eb;
+            text-decoration: none;
+            padding: 14px 16px;
+            border-radius: 9px;
+            margin: 6px 0;
+            font-size: 16px;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .topbar {
+            height: 56px;
+            background: white;
+            border-bottom: 1px solid #dbe2ea;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            font-weight: 700;
+        }
+
+        .role {
+            font-weight: 400;
+            color: #334155;
+        }
+
+        .content {
+            padding: 34px 30px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 30px;
+            color: #0f172a;
+        }
+
+        .subtitle {
+            margin: 8px 0 24px;
+            color: #64748b;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+            gap: 18px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 3px 12px rgba(15, 23, 42, 0.06);
+        }
+
+        .code {
+            font-size: 13px;
+            font-weight: 700;
+            color: #2563eb;
+        }
+
+        .name {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 8px 0 14px;
+            color: #0f172a;
+        }
+
+        .meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 13px;
+        }
+
+        .meta div {
+            background: #f8fafc;
+            padding: 10px;
+            border-radius: 7px;
+        }
+
+        .label {
+            display: block;
+            color: #64748b;
+            font-size: 11px;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .high {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .low {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .button {
+            display: inline-block;
+            margin-top: 16px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 7px;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .button:hover {
+            background: #1d4ed8;
+        }
+
+        .empty {
+            background: white;
+            border-radius: 12px;
+            padding: 55px;
+            text-align: center;
+            color: #64748b;
+        }
+
+        @media (max-width: 800px) {
+            .sidebar {
+                width: 190px;
+            }
+
+            .content {
+                padding: 22px 16px;
+            }
+
+            .topbar {
+                padding: 0 16px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .layout {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 14px;
+            }
+
+            .nav {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+            }
+
+            .nav a {
+                margin: 0;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            AI-MPLAD
+        </div>
+
+        <nav class="nav">
+
+            <a href="{{ url_for('dashboard') }}">
+                📊 Dashboard
+            </a>
+
+            <a href="{{ url_for('projects') }}" class="active">
+                📁 Projects
+            </a>
+
+            {% if session.get('role') in ['Verification Officer', 'Supervisor', 'Admin'] %}
+
+            <a href="{{ url_for('review_queue') }}">
+                ⚠️ Review Queue
+            </a>
+
+            <a href="{{ url_for('districts') }}">
+                🗺️ Districts
+            </a>
+
+            {% endif %}
+
+            {% if session.get('role') in ['Supervisor', 'Admin'] %}
+
+            <a href="{{ url_for('audit') }}">
+                📋 Audit Trail
+            </a>
+
+            {% endif %}
+
+            <a href="{{ url_for('logout') }}">
+                🚪 Logout
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <span>
+                MPLAD Monitoring System
+            </span>
+
+            <span class="role">
+                👤 {{ session.get('role', 'User') }}
+            </span>
+
+        </header>
+
+
+        <section class="content">
+
+            <h1>
+                All MPLAD Projects
+            </h1>
+
+            <p class="subtitle">
+                AI-powered monitoring, risk assessment and project analysis
+            </p>
+
+
+            {% set project_list = projects|default([]) %}
+
+
+            {% if project_list|length == 0 %}
+
+            <div class="empty">
+
+                <h2>
+                    No MPLAD projects found
+                </h2>
+
+                <p>
+                    The database currently contains no projects available for display.
+                </p>
+
+            </div>
+
+
+            {% else %}
+
+
+            <div class="grid">
+
+                {% for item in project_list %}
+
+                    {% set p = item.project|default({}) %}
+
+                    {% set level = item.risk_level|default(item.level|default('LOW'))|upper %}
+
+                    <div class="card">
+
+                        <div class="code">
+                            {{ p.get('project_code', '') }}
+                        </div>
+
+                        <div class="name">
+                            {{ p.get('project_name', 'Unnamed Project') }}
+                        </div>
+
+
+                        <div class="meta">
+
+                            <div>
+                                <span class="label">
+                                    District
+                                </span>
+
+                                {{ p.get('district', p.get('location', '-')) }}
+                            </div>
+
+
+                            <div>
+                                <span class="label">
+                                    Category
+                                </span>
+
+                                {{ p.get('category', '-') }}
+                            </div>
+
+
+                            <div>
+                                <span class="label">
+                                    Status
+                                </span>
+
+                                {{ p.get('status', '-') }}
+                            </div>
+
+
+                            <div>
+                                <span class="label">
+                                    Risk
+                                </span>
+
+                                <span class="badge {{ level|lower }}">
+                                    {{ level }}
+                                    ·
+                                    {{ item.risk_score|default(item.score|default(0)) }}
+                                </span>
+                            </div>
+
+
+                            <div>
+                                <span class="label">
+                                    Physical Progress
+                                </span>
+
+                                {{ p.get('physical_progress', 0) }}%
+                            </div>
+
+
+                            <div>
+                                <span class="label">
+                                    Financial Progress
+                                </span>
+
+                                {{ p.get('financial_progress', 0) }}%
+                            </div>
+
+                        </div>
+
+
+                        <a
+                            class="button"
+                            href="{{ url_for('project_detail', project_id=p.get('id')) }}"
+                        >
+                            🔎 Analyze Project
+                        </a>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+            {% endif %}
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

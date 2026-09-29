@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Audit Trail | MPLAD Monitoring System</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1e293b;
+        }
+
+        /* =========================
+           NAVBAR
+        ========================= */
+
+        .navbar {
+            background: #0f172a;
+            color: white;
+            padding: 16px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .brand {
+            font-size: 19px;
+            font-weight: bold;
+        }
+
+        .brand span {
+            display: block;
+            font-size: 11px;
+            font-weight: normal;
+            color: #cbd5e1;
+            margin-top: 4px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            padding: 9px 12px;
+            border-radius: 7px;
+            font-size: 13px;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: #1e293b;
+            color: white;
+        }
+
+        /* =========================
+           PROFILE
+        ========================= */
+
+        .profile {
+            position: relative;
+            margin-left: 8px;
+        }
+
+        .profile-button {
+            background: #1e293b;
+            color: white;
+            border: 1px solid #334155;
+            padding: 9px 13px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .profile-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 42px;
+            width: 210px;
+            background: white;
+            color: #1e293b;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            padding: 15px;
+            z-index: 100;
+        }
+
+        .profile:hover .profile-menu {
+            display: block;
+        }
+
+        .profile-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .profile-role {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 12px;
+        }
+
+        .profile-menu a {
+            display: block;
+            text-decoration: none;
+            background: #f1f5f9;
+            color: #1e293b;
+            padding: 9px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .profile-menu a:hover {
+            background: #e2e8f0;
+        }
+
+        /* =========================
+           CONTAINER
+        ========================= */
+
+        .container {
+            max-width: 1250px;
+            margin: 0 auto;
+            padding: 35px 25px;
+        }
+
+        .page-header {
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            margin: 0;
+            font-size: 30px;
+            color: #0f172a;
+        }
+
+        .page-header p {
+            margin-top: 8px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* =========================
+           INFO BOX
+        ========================= */
+
+        .info-box {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 25px;
+        }
+
+        .info-title {
+            font-weight: bold;
+            color: #1e40af;
+            margin-bottom: 7px;
+        }
+
+        .info-text {
+            color: #334155;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* =========================
+           AUDIT CARD
+        ========================= */
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            box-shadow: 0 3px 12px rgba(15, 23, 42, 0.05);
+        }
+
+        .card-header {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .card-title {
+            margin: 0;
+            font-size: 18px;
+            color: #0f172a;
+        }
+
+        .card-description {
+            margin-top: 5px;
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        /* =========================
+           TABLE
+        ========================= */
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #475569;
+            font-size: 12px;
+            text-align: left;
+            padding: 14px;
+            border-bottom: 1px solid #e2e8f0;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 14px;
+            font-size: 13px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+
+        tr:hover td {
+            background: #f8fafc;
+        }
+
+        .project-code {
+            font-weight: bold;
+            color: #1d4ed8;
+        }
+
+        .action {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .verified {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .flagged {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .escalated {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .verification {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .role {
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .remark {
+            color: #475569;
+            max-width: 300px;
+            line-height: 1.5;
+        }
+
+        .timestamp {
+            color: #64748b;
+            white-space: nowrap;
+            font-size: 12px;
+        }
+
+        /* =========================
+           EMPTY STATE
+        ========================= */
+
+        .empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+        }
+
+        .empty-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .empty-title {
+            font-size: 17px;
+            font-weight: bold;
+            color: #334155;
+            margin-bottom: 6px;
+        }
+
+        .empty-text {
+            font-size: 13px;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .footer {
+            text-align: center;
+            padding: 25px;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 850px) {
+
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .nav-links {
+                width: 100%;
+            }
+
+            .container {
+                padding: 25px 15px;
+            }
+
+            .page-header h1 {
+                font-size: 25px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     NAVIGATION
+========================================================= -->
+
+<div class="navbar">
+
+    <div class="brand">
+
+        AI-Powered MPLAD Monitoring System
+
+        <span>
+            AI-assisted monitoring with human verification
+        </span>
+
+    </div>
+
+
+    <div class="nav-links">
+
+        <a href="{{ url_for('dashboard') }}">
+            Dashboard
+        </a>
+
+
+        <a href="{{ url_for('projects') }}">
+            Projects
+        </a>
+
+
+        {% if session.get('role') in
+              ['Verification Officer', 'Supervisor', 'Admin'] %}
+
+            <a href="{{ url_for('review_queue') }}">
+                Review Queue
+            </a>
+
+            <a href="{{ url_for('districts') }}">
+                Districts
+            </a>
+
+        {% endif %}
+
+
+        {% if session.get('role') in
+              ['Supervisor', 'Admin'] %}
+
+            <a href="{{ url_for('audit') }}"
+               class="active">
+
+                Audit Trail
+
+            </a>
+
+        {% endif %}
+
+
+        <div class="profile">
+
+            <button class="profile-button">
+
+                👤
+                {{ session.get('role', 'User') }}
+                ▾
+
+            </button>
+
+
+            <div class="profile-menu">
+
+                <div class="profile-name">
+
+                    {{ session.get('username', 'User') }}
+
+                </div>
+
+
+                <div class="profile-role">
+
+                    Role:
+                    {{ session.get('role', 'User') }}
+
+                </div>
+
+
+                <a href="{{ url_for('logout') }}">
+
+                    Logout
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
+<div class="container">
+
+
+    <div class="page-header">
+
+        <h1>
+            Audit Trail
+        </h1>
+
+        <p>
+            Complete record of human verification and administrative actions.
+        </p>
+
+    </div>
+
+
+    <!-- =====================================================
+         INFORMATION BOX
+    ====================================================== -->
+
+    <div class="info-box">
+
+        <div class="info-title">
+            🔐 Audit & Accountability
+        </div>
+
+        <div class="info-text">
+
+            Every verification action performed on a project is
+            recorded with the project code, action, user role,
+            remarks and timestamp.
+
+            This provides traceability for human decisions after
+            AI-assisted monitoring.
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         AUDIT TABLE
+    ====================================================== -->
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <h2 class="card-title">
+                Verification Activity
+            </h2>
+
+            <div class="card-description">
+                Latest actions are displayed first.
+            </div>
+
+        </div>
+
+
+        {% if audit_records %}
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            #
+                        </th>
+
+                        <th>
+                            Project Code
+                        </th>
+
+                        <th>
+                            Action
+                        </th>
+
+                        <th>
+                            User Role
+                        </th>
+
+                        <th>
+                            Remark
+                        </th>
+
+                        <th>
+                            Timestamp
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for record in audit_records %}
+
+                    <tr>
+
+                        <td>
+                            {{ loop.index }}
+                        </td>
+
+
+                        <td>
+
+                            <span class="project-code">
+
+                                {{ record.get('project_code', '-') }}
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            {% set action =
+                                record.get('action', '') %}
+
+                            {% if action == 'Verified' %}
+
+                                <span class="action verified">
+                                    Verified
+                                </span>
+
+                            {% elif action == 'Flagged for Review' %}
+
+                                <span class="action flagged">
+                                    Flagged for Review
+                                </span>
+
+                            {% elif action == 'Escalated' %}
+
+                                <span class="action escalated">
+                                    Escalated
+                                </span>
+
+                            {% elif action == 'Under Verification' %}
+
+                                <span class="action verification">
+                                    Under Verification
+                                </span>
+
+                            {% else %}
+
+                                <span class="action verification">
+                                    {{ action or 'Unknown' }}
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="role">
+
+                                {{ record.get('user_role', '-') }}
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="remark">
+
+                                {{ record.get('remark', '') or
+                                   'No remark provided.' }}
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="timestamp">
+
+                                {{ record.get('timestamp', '-') }}
+
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        {% else %}
+
+
+        <div class="empty">
+
+            <div class="empty-icon">
+                📋
+            </div>
+
+            <div class="empty-title">
+                No audit records yet
+            </div>
+
+            <div class="empty-text">
+
+                Verification actions will appear here
+                after an authorized officer performs an action.
+
+            </div>
+
+        </div>
+
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<div class="footer">
+
+    AI-Powered MPLAD Monitoring System
+    &nbsp;|&nbsp;
+    AI-assisted monitoring with human verification
+
+</div>
+
+
+</body>
+
+</html>

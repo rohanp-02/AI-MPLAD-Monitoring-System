@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        MPLAD AI - Login
+    </title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+
+            margin: 0;
+
+            font-family:
+                Arial,
+                sans-serif;
+
+            background:
+                #f1f5f9;
+
+            color:
+                #1f2937;
+
+            min-height: 100vh;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+        }
+
+        .login-card {
+
+            width: 390px;
+
+            max-width: 92%;
+
+            background:
+                white;
+
+            padding: 32px;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 8px 30px
+                rgba(0,0,0,.10);
+        }
+
+        h1 {
+
+            margin:
+                0 0 8px;
+
+            font-size:
+                24px;
+        }
+
+        .subtitle {
+
+            color:
+                #64748b;
+
+            margin-bottom:
+                25px;
+        }
+
+        label {
+
+            display:
+                block;
+
+            margin:
+                15px 0 7px;
+
+            font-weight:
+                bold;
+
+            font-size:
+                14px;
+        }
+
+        input {
+
+            width:
+                100%;
+
+            padding:
+                12px;
+
+            border:
+                1px solid #cbd5e1;
+
+            border-radius:
+                7px;
+
+            font-size:
+                14px;
+        }
+
+        button {
+
+            width:
+                100%;
+
+            margin-top:
+                22px;
+
+            padding:
+                12px;
+
+            border:
+                0;
+
+            border-radius:
+                7px;
+
+            background:
+                #2563eb;
+
+            color:
+                white;
+
+            font-weight:
+                bold;
+
+            cursor:
+                pointer;
+        }
+
+        .flash {
+
+            padding:
+                10px;
+
+            margin-bottom:
+                15px;
+
+            border-radius:
+                6px;
+
+            background:
+                #fee2e2;
+
+            color:
+                #991b1b;
+
+            font-size:
+                13px;
+        }
+
+        .demo {
+
+            margin-top:
+                22px;
+
+            padding:
+                14px;
+
+            background:
+                #f8fafc;
+
+            border-radius:
+                7px;
+
+            font-size:
+                12px;
+
+            line-height:
+                1.7;
+        }
+
+        .demo strong {
+
+            font-size:
+                13px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="login-card">
+
+    <h1>
+        AI-Powered MPLAD
+        Monitoring System
+    </h1>
+
+    <div class="subtitle">
+        Secure role-based login
+    </div>
+
+
+    {% with messages =
+        get_flashed_messages(
+            with_categories=true
+        )
+    %}
+
+        {% for category, message in messages %}
+
+            <div class="flash">
+                {{ message }}
+            </div>
+
+        {% endfor %}
+
+    {% endwith %}
+
+
+    <form
+        method="POST"
+        action="{{ url_for('login') }}"
+    >
+
+        <label>
+            Username
+        </label>
+
+        <input
+            type="text"
+            name="username"
+            required
+            autofocus
+        >
+
+
+        <label>
+            Password
+        </label>
+
+        <input
+            type="password"
+            name="password"
+            required
+        >
+
+
+        <button type="submit">
+            Login
+        </button>
+
+    </form>
+
+
+    <div class="demo">
+
+        <strong>
+            Demo Accounts
+        </strong>
+
+        <br>
+
+        Verification Officer:
+        <b>verification</b>
+        /
+        verify123
+
+        <br>
+
+        Project Officer:
+        <b>project</b>
+        /
+        project123
+
+        <br>
+
+        Supervisor:
+        <b>supervisor</b>
+        /
+        super123
+
+        <br>
+
+        Admin:
+        <b>admin</b>
+        /
+        admin123
+
+    </div>
+
+</div>
+
+</body>
+</html>

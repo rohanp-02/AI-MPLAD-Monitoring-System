@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>District Analytics - AI-MPLAD</title>
+
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #172033;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 240px;
+            background: #111827;
+            color: white;
+            padding: 22px 14px;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 2px 0 30px;
+        }
+
+        .nav a {
+            display: block;
+            color: #e5e7eb;
+            text-decoration: none;
+            padding: 14px 16px;
+            border-radius: 9px;
+            margin: 6px 0;
+            font-size: 16px;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .topbar {
+            height: 56px;
+            background: white;
+            border-bottom: 1px solid #dbe2ea;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            font-weight: 700;
+        }
+
+        .role {
+            font-weight: 400;
+            color: #334155;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 30px;
+            color: #0f172a;
+        }
+
+        .subtitle {
+            margin: 8px 0 22px;
+            color: #64748b;
+        }
+
+        .info {
+            background: #eff6ff;
+            border-left: 4px solid #2563eb;
+            padding: 14px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .info strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .info p {
+            margin: 0;
+            color: #475569;
+            font-size: 13px;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 10px;
+            padding: 18px;
+            box-shadow: 0 2px 10px rgba(0,0,0,.06);
+        }
+
+        .summary-title {
+            font-size: 12px;
+            color: #64748b;
+            text-transform: uppercase;
+        }
+
+        .summary-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-top: 6px;
+        }
+
+        .map-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,.06);
+            margin-bottom: 20px;
+        }
+
+        .map-header {
+            padding: 18px 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .map-header h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .map-header p {
+            margin: 6px 0 0;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        #districtMap {
+            height: 500px;
+            width: 100%;
+            background: #dbeafe;
+        }
+
+        .map-fallback {
+            display: none;
+            padding: 35px;
+            text-align: center;
+            color: #64748b;
+        }
+
+        .table-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,.06);
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #475569;
+            font-size: 12px;
+            text-transform: uppercase;
+            text-align: left;
+            padding: 13px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        td {
+            padding: 13px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .high {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .low {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .riskbar {
+            width: 120px;
+            height: 7px;
+            background: #e2e8f0;
+            border-radius: 9px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+
+        .riskfill {
+            height: 100%;
+            background: #2563eb;
+        }
+
+        .legend {
+            background: white;
+            padding: 8px 11px;
+            border-radius: 6px;
+            box-shadow: 0 1px 5px rgba(0,0,0,.3);
+            line-height: 22px;
+        }
+
+        .dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+
+        @media (max-width: 900px) {
+
+            .summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 700px) {
+
+            .layout {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 14px;
+            }
+
+            .nav {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+            }
+
+            .nav a {
+                margin: 0;
+            }
+
+            .content {
+                padding: 18px;
+            }
+
+            .summary {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar {
+                padding: 0 16px;
+            }
+
+            #districtMap {
+                height: 420px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="layout">
+
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            AI-MPLAD
+        </div>
+
+
+        <nav class="nav">
+
+            <a href="{{ url_for('dashboard') }}">
+                📊 Dashboard
+            </a>
+
+
+            <a href="{{ url_for('projects') }}">
+                📁 Projects
+            </a>
+
+
+            {% if session.get('role') in ['Verification Officer', 'Supervisor', 'Admin'] %}
+
+            <a href="{{ url_for('review_queue') }}">
+                ⚠️ Review Queue
+            </a>
+
+
+            <a
+                href="{{ url_for('districts') }}"
+                class="active"
+            >
+                🗺️ Districts
+            </a>
+
+            {% endif %}
+
+
+            {% if session.get('role') in ['Supervisor', 'Admin'] %}
+
+            <a href="{{ url_for('audit') }}">
+                📋 Audit Trail
+            </a>
+
+            {% endif %}
+
+
+            <a href="{{ url_for('logout') }}">
+                🚪 Logout
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <main class="main">
+
+
+        <header class="topbar">
+
+            <span>
+                MPLAD Monitoring System
+            </span>
+
+            <span class="role">
+                👤 {{ session.get('role', 'User') }}
+            </span>
+
+        </header>
+
+
+        <section class="content">
+
+
+            <h1>
+                District Analytics
+            </h1>
+
+
+            <p class="subtitle">
+                District-level overview of MPLAD project risk,
+                progress and AI anomaly indicators.
+            </p>
+
+
+            <div class="info">
+
+                <strong>
+                    District-Level AI Monitoring
+                </strong>
+
+                <p>
+                    Aggregated project indicators help authorized
+                    officials identify districts that may require
+                    additional verification. AI indicators support
+                    human review and do not by themselves establish fraud.
+                </p>
+
+            </div>
+
+
+            {% set district_list = districts|default([]) %}
+
+
+            {% set ns = namespace(
+                projects=0,
+                high=0,
+                medium=0,
+                anomalies=0
+            ) %}
+
+
+            {% for d in district_list %}
+
+                {% set ns.projects =
+                    ns.projects + d.get('projects', 0)
+                %}
+
+                {% set ns.high =
+                    ns.high + d.get('high', 0)
+                %}
+
+                {% set ns.medium =
+                    ns.medium + d.get('medium', 0)
+                %}
+
+                {% set ns.anomalies =
+                    ns.anomalies + d.get('anomalies', 0)
+                %}
+
+            {% endfor %}
+
+
+            <div class="summary">
+
+
+                <div class="summary-card">
+
+                    <div class="summary-title">
+                        Districts
+                    </div>
+
+                    <div class="summary-value">
+                        {{ district_list|length }}
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="summary-title">
+                        Projects
+                    </div>
+
+                    <div class="summary-value">
+                        {{ ns.projects }}
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="summary-title">
+                        High Risk
+                    </div>
+
+                    <div class="summary-value">
+                        {{ ns.high }}
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="summary-title">
+                        ML Anomalies
+                    </div>
+
+                    <div class="summary-value">
+                        {{ ns.anomalies }}
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- MAP -->
+
+            <div class="map-card">
+
+
+                <div class="map-header">
+
+                    <h2>
+                        🗺️ District Risk Map
+                    </h2>
+
+                    <p>
+                        Click a district marker to view
+                        project, risk and anomaly information.
+                    </p>
+
+                </div>
+
+
+                <div id="districtMap"></div>
+
+
+                <div
+                    id="mapFallback"
+                    class="map-fallback"
+                >
+                    The map library could not be loaded.
+                    The district table below remains available.
+                </div>
+
+
+            </div>
+
+
+            <!-- TABLE -->
+
+            <div class="table-card">
+
+
+                <div class="map-header">
+
+                    <h2>
+                        District Monitoring Overview
+                    </h2>
+
+                    <p>
+                        Aggregated project risk and anomaly
+                        indicators by district.
+                    </p>
+
+                </div>
+
+
+                <div class="table-wrap">
+
+                    <table>
+
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    District
+                                </th>
+
+                                <th>
+                                    Projects
+                                </th>
+
+                                <th>
+                                    High
+                                </th>
+
+                                <th>
+                                    Medium
+                                </th>
+
+                                <th>
+                                    Low
+                                </th>
+
+                                <th>
+                                    ML Anomalies
+                                </th>
+
+                                <th>
+                                    Average Risk
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+
+                        {% if district_list %}
+
+
+                            {% for d in district_list %}
+
+
+                                {% set risk =
+                                    d.get('risk_score', 0)|float
+                                %}
+
+
+                                <tr>
+
+
+                                    <td>
+                                        <strong>
+                                            {{ d.get('district', '-') }}
+                                        </strong>
+                                    </td>
+
+
+                                    <td>
+                                        {{ d.get('projects', 0) }}
+                                    </td>
+
+
+                                    <td>
+                                        <span class="badge high">
+                                            {{ d.get('high', 0) }}
+                                        </span>
+                                    </td>
+
+
+                                    <td>
+                                        <span class="badge medium">
+                                            {{ d.get('medium', 0) }}
+                                        </span>
+                                    </td>
+
+
+                                    <td>
+                                        <span class="badge low">
+                                            {{ d.get('low', 0) }}
+                                        </span>
+                                    </td>
+
+
+                                    <td>
+                                        {{ d.get('anomalies', 0) }}
+                                    </td>
+
+
+                                    <td>
+
+                                        <strong>
+                                            {{ "%.1f"|format(risk) }}/100
+                                        </strong>
+
+
+                                        <div class="riskbar">
+
+                                            <div
+                                                class="riskfill"
+                                                style="width: {{ [risk, 100]|min }}%;"
+                                            ></div>
+
+                                        </div>
+
+                                    </td>
+
+
+                                </tr>
+
+
+                            {% endfor %}
+
+
+                        {% else %}
+
+
+                            <tr>
+
+                                <td
+                                    colspan="7"
+                                    style="text-align:center;padding:40px"
+                                >
+                                    No district data available.
+                                </td>
+
+                            </tr>
+
+
+                        {% endif %}
+
+
+                        </tbody>
+
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+</div>
+
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+
+<script>
+
+const districtData = {{ district_list|tojson }};
+
+
+function riskColor(level) {
+
+    level = String(level || '').toUpperCase();
+
+    if (level === 'HIGH') {
+        return '#dc2626';
+    }
+
+    if (level === 'MEDIUM') {
+        return '#f59e0b';
+    }
+
+    return '#16a34a';
+}
+
+
+function markerIcon(level) {
+
+    const color = riskColor(level);
+
+    return L.divIcon({
+
+        className: '',
+
+        html:
+            '<div style="' +
+            'width:20px;' +
+            'height:20px;' +
+            'border-radius:50%;' +
+            'background:' + color + ';' +
+            'border:3px solid white;' +
+            'box-shadow:0 1px 6px rgba(0,0,0,.5)' +
+            '"></div>',
+
+        iconSize: [20, 20],
+
+        iconAnchor: [10, 10],
+
+        popupAnchor: [0, -10]
+
+    });
+
+}
+
+
+function initMap() {
+
+
+    if (typeof L === 'undefined') {
+
+        document.getElementById(
+            'districtMap'
+        ).style.display = 'none';
+
+        document.getElementById(
+            'mapFallback'
+        ).style.display = 'block';
+
+        return;
+
+    }
+
+
+    const map = L.map(
+        'districtMap'
+    ).setView(
+        [15.3173, 75.7139],
+        7
+    );
+
+
+    L.tileLayer(
+        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        {
+            maxZoom: 18,
+            attribution: '&copy; OpenStreetMap contributors'
+        }
+    ).addTo(map);
+
+
+    const bounds = [];
+
+
+    districtData.forEach(function(d) {
+
+
+        const lat = Number(d.latitude);
+
+        const lon = Number(d.longitude);
+
+
+        if (
+            !Number.isFinite(lat) ||
+            !Number.isFinite(lon)
+        ) {
+            return;
+        }
+
+
+        const level =
+            d.risk_level || 'LOW';
+
+
+        const risk =
+            Number(d.risk_score || 0);
+
+
+        const popup =
+
+            '<div style="min-width:210px">' +
+
+            '<h3 style="margin:0 0 8px">' +
+            String(d.district || 'District') +
+            '</h3>' +
+
+            '<b>Projects:</b> ' +
+            Number(d.projects || 0) +
+            '<br>' +
+
+            '<b>High risk:</b> ' +
+            Number(d.high || 0) +
+            '<br>' +
+
+            '<b>Medium risk:</b> ' +
+            Number(d.medium || 0) +
+            '<br>' +
+
+            '<b>Low risk:</b> ' +
+            Number(d.low || 0) +
+            '<br>' +
+
+            '<b>ML anomalies:</b> ' +
+            Number(d.anomalies || 0) +
+            '<br>' +
+
+            '<b>Average risk:</b> ' +
+            risk +
+            '/100' +
+            '<br>' +
+
+            '<b>Risk level:</b> ' +
+            String(level) +
+
+            '</div>';
+
+
+        L.marker(
+            [lat, lon],
+            {
+                icon: markerIcon(level)
+            }
+        )
+        .addTo(map)
+        .bindPopup(popup);
+
+
+        bounds.push(
+            [lat, lon]
+        );
+
+    });
+
+
+    if (bounds.length > 0) {
+
+        map.fitBounds(
+            bounds,
+            {
+                padding: [35, 35],
+                maxZoom: 8
+            }
+        );
+
+    }
+
+
+    setTimeout(
+        function() {
+            map.invalidateSize();
+        },
+        500
+    );
+
+
+    const legend =
+        L.control({
+            position: 'bottomright'
+        });
+
+
+    legend.onAdd =
+        function() {
+
+            const div =
+                L.DomUtil.create(
+                    'div',
+                    'legend'
+                );
+
+
+            div.innerHTML =
+
+                '<b>Risk level</b><br>' +
+
+                '<span class="dot" ' +
+                'style="background:#dc2626"></span>' +
+                'High<br>' +
+
+                '<span class="dot" ' +
+                'style="background:#f59e0b"></span>' +
+                'Medium<br>' +
+
+                '<span class="dot" ' +
+                'style="background:#16a34a"></span>' +
+                'Low';
+
+
+            return div;
+
+        };
+
+
+    legend.addTo(map);
+
+}
+
+
+window.addEventListener(
+    'load',
+    initMap
+);
+
+</script>
+
+
+</body>
+
+</html>
