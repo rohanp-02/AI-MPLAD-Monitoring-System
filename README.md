@@ -725,49 +725,6 @@ The current system uses project data available within the prototype database. Ma
 
 ---
 
-# 📸 Screenshots
-
-Add screenshots of the application here.
-
-### Dashboard
-
-```text
-![Dashboard](screenshots/dashboard.png)
-```
-
-### Projects
-
-```text
-![Projects](screenshots/projects.png)
-```
-
-### Project Analysis
-
-```text
-![Project Analysis](screenshots/project-analysis.png)
-```
-
-### Review Queue
-
-```text
-![Review Queue](screenshots/review-queue.png)
-```
-
-### District Monitoring
-
-```text
-![District Monitoring](screenshots/districts.png)
-```
-
-### Audit Trail
-
-```text
-![Audit Trail](screenshots/audit.png)
-```
-
-> Create a `screenshots` folder in the repository and place your actual screenshots there.
-
----
 
 # 📚 Project Modules
 
