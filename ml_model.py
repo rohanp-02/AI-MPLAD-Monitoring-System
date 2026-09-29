@@ -57,14 +57,14 @@ def detect_anomalies():
 
     # Standardize numerical features
     scaler = StandardScaler()
-
     X = scaler.fit_transform(df[features])
 
-    # Isolation Forest
+    # Memory-efficient Isolation Forest
     model = IsolationForest(
-        n_estimators=200,
+        n_estimators=50,
         contamination=0.25,
-        random_state=42
+        random_state=42,
+        n_jobs=1
     )
 
     predictions = model.fit_predict(X)
